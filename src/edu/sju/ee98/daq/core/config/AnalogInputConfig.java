@@ -4,27 +4,28 @@
  */
 package edu.sju.ee98.daq.core.config;
 
-import edu.sju.ee98.ni.daqmx.config.NIAnalogConfig;
+import edu.sju.ee98.ni.daqmx.config.NIClkTiming;
+import edu.sju.ee98.ni.daqmx.config.NIVoltageChan;
 import java.io.Serializable;
 
 /**
  *
  * @author 102m05008
  */
-public class AnalogInputConfig implements NIAnalogConfig, Serializable {
+public class AnalogInputConfig implements NIVoltageChan, NIClkTiming, Serializable {
 
     private String physicalChannel;
     private double minVoltage;
     private double maxVoltage;
     private double rate;
-    private long length;
+    private long sampsPerChanToAcquire;
 
-    public AnalogInputConfig(String physicalChannel, double minVoltage, double maxVoltage, double rate, long length) {
+    public AnalogInputConfig(String physicalChannel, double minVoltage, double maxVoltage, double rate, long sampsPerChanToAcquire) {
         this.physicalChannel = physicalChannel;
         this.minVoltage = minVoltage;
         this.maxVoltage = maxVoltage;
         this.rate = rate;
-        this.length = length;
+        this.sampsPerChanToAcquire = sampsPerChanToAcquire;
     }
 
     @Override
@@ -48,12 +49,12 @@ public class AnalogInputConfig implements NIAnalogConfig, Serializable {
     }
 
     @Override
-    public long getLength() {
-        return length;
+    public long getSampsPerChanToAcquire() {
+        return sampsPerChanToAcquire;
     }
 
     @Override
     public String toString() {
-        return "NIAnalogConfig{" + "physicalChannel=" + physicalChannel + ", minVoltage=" + minVoltage + ", maxVoltage=" + maxVoltage + ", rate=" + rate + ", length=" + length + '}';
+        return "NIAnalogConfig{" + "physicalChannel=" + physicalChannel + ", minVoltage=" + minVoltage + ", maxVoltage=" + maxVoltage + ", rate=" + rate + ", length=" + sampsPerChanToAcquire + '}';
     }
 }
