@@ -18,14 +18,14 @@ public class AnalogInputConfig implements NIVoltageChan, NIClkTiming, Serializab
     private double minVoltage;
     private double maxVoltage;
     private double rate;
-    private long sampsPerChanToAcquire;
+    private long length;
 
-    public AnalogInputConfig(String physicalChannel, double minVoltage, double maxVoltage, double rate, long sampsPerChanToAcquire) {
+    public AnalogInputConfig(String physicalChannel, double minVoltage, double maxVoltage, double rate, long length) {
         this.physicalChannel = physicalChannel;
         this.minVoltage = minVoltage;
         this.maxVoltage = maxVoltage;
         this.rate = rate;
-        this.sampsPerChanToAcquire = sampsPerChanToAcquire;
+        this.length = length;
     }
 
     @Override
@@ -49,12 +49,12 @@ public class AnalogInputConfig implements NIVoltageChan, NIClkTiming, Serializab
     }
 
     @Override
-    public long getSampsPerChanToAcquire() {
-        return sampsPerChanToAcquire;
+    public long getLength() {
+        return length;
     }
 
     @Override
     public String toString() {
-        return "NIAnalogConfig{" + "physicalChannel=" + physicalChannel + ", minVoltage=" + minVoltage + ", maxVoltage=" + maxVoltage + ", rate=" + rate + ", length=" + sampsPerChanToAcquire + '}';
+        return "NIAnalogConfig{" + "physicalChannel=" + physicalChannel + ", minVoltage=" + minVoltage + ", maxVoltage=" + maxVoltage + ", rate=" + rate + ", length=" + length + '}';
     }
 }
