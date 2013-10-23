@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package edu.sju.ee98.daq.core.wave;
+package edu.sju.ee98.daq.core.data;
 
 import edu.sju.ee98.ni.daqmx.data.NIWaveData;
 import org.apache.commons.math3.complex.Complex;

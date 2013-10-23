@@ -13,7 +13,7 @@ import java.util.logging.Logger;
  *
  * @author Leo
  */
-public class FRA {
+public class NIAO {
 
     public static void main(String[] args) {
         AnalogInputConfig config = new AnalogInputConfig("Dev1/ao0", -10.0, 10.0, 1000.0, 1000);
