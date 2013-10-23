@@ -12,7 +12,7 @@ import java.io.Serializable;
  *
  * @author 102m05008
  */
-public class AnalogInputConfig implements NIVoltageChan, NIClkTiming, Serializable {
+public class AnalogConfig implements NIVoltageChan, NIClkTiming, Serializable {
 
     private String physicalChannel;
     private double minVoltage;
@@ -20,7 +20,7 @@ public class AnalogInputConfig implements NIVoltageChan, NIClkTiming, Serializab
     private double rate;
     private long length;
 
-    public AnalogInputConfig(String physicalChannel, double minVoltage, double maxVoltage, double rate, long length) {
+    public AnalogConfig(String physicalChannel, double minVoltage, double maxVoltage, double rate, long length) {
         this.physicalChannel = physicalChannel;
         this.minVoltage = minVoltage;
         this.maxVoltage = maxVoltage;
