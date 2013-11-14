@@ -4,6 +4,9 @@
  */
 package edu.sju.ee98.daq.core.config;
 
+import edu.sju.ee98.ni.daqmx.analog.AcqIntClk;
+import edu.sju.ee98.ni.daqmx.analog.ContGenIntClk;
+import edu.sju.ee98.ni.daqmx.generator.AnalogGenerator;
 import java.io.Serializable;
 
 /**
@@ -29,12 +32,23 @@ public class FrequencyResponseConfig implements Serializable {
         return frequency;
     }
 
+    public ContGenIntClk createOutput() {
+        AnalogGenerator analogGenerator = new AnalogGenerator(frequency.getRate(), length, this.voltage, frequency.frequency);
+        AnalogConfig outputConfig = getOutputConfig();
+        return new ContGenIntClk(outputConfig, outputConfig, analogGenerator.getData());
+    }
+
+    public AcqIntClk createInput() {
+        AnalogConfig intputConfig = getIntputConfig();
+        return new AcqIntClk(intputConfig, intputConfig);
+    }
+
     public AnalogConfig getOutputConfig() {
-        return new AnalogConfig(outputChannel, -voltage, voltage, frequency.frequency, length);
+        return new AnalogConfig(outputChannel, -voltage * 1000, voltage * 1000, frequency.frequency, length);
     }
 
     public AnalogConfig getIntputConfig() {
-        return new AnalogConfig(inputChannel, -voltage, voltage, frequency.frequency, length);
+        return new AnalogConfig(inputChannel, -voltage * 1000, voltage * 1000, frequency.frequency, length);
     }
 
     public int getLength() {
@@ -62,6 +76,14 @@ public class FrequencyResponseConfig implements Serializable {
         public boolean next() {
             this.frequency = this.frequency + this.log;
             return this.frequency > max;
+        }
+
+        public double getFrequency() {
+            return this.frequency;
+        }
+
+        public double getRate() {
+            return this.frequency * 1024;
         }
     }
 
