@@ -6,7 +6,7 @@ package edu.sju.ee98.daq.core.config;
 
 import edu.sju.ee98.ni.daqmx.analog.AcqIntClk;
 import edu.sju.ee98.ni.daqmx.analog.ContGenIntClk;
-import edu.sju.ee98.ni.daqmx.generator.AnalogGenerator;
+import edu.sju.ee98.ni.daqmx.analog.AnalogGenerator;
 import java.io.Serializable;
 
 /**

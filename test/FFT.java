@@ -1,5 +1,5 @@
 
-import edu.sju.ee98.ni.daqmx.generator.AnalogGenerator;
+import edu.sju.ee98.ni.daqmx.analog.AnalogGenerator;
 import java.util.Arrays;
 import org.apache.commons.math3.complex.Complex;
 import org.apache.commons.math3.transform.DftNormalization;
