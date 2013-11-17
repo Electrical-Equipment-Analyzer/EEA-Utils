@@ -35,6 +35,8 @@ public class FrequencyResponseConfig implements Serializable {
     public ContGenIntClk createOutput() {
         AnalogGenerator analogGenerator = new AnalogGenerator(frequency.getRate(), length, this.voltage, frequency.frequency);
         AnalogConfig outputConfig = getOutputConfig();
+        System.out.println(outputConfig);
+        System.out.println(analogGenerator.getData());
         return new ContGenIntClk(outputConfig, outputConfig, analogGenerator.getData());
     }
 
@@ -44,11 +46,11 @@ public class FrequencyResponseConfig implements Serializable {
     }
 
     public AnalogConfig getOutputConfig() {
-        return new AnalogConfig(outputChannel, -voltage * 1000, voltage * 1000, frequency.frequency, length);
+        return new AnalogConfig(outputChannel, -10, 10, frequency.getRate(), frequency.getLength());
     }
 
     public AnalogConfig getIntputConfig() {
-        return new AnalogConfig(inputChannel, -voltage * 1000, voltage * 1000, frequency.frequency, length);
+        return new AnalogConfig(inputChannel, -42, 42, frequency.getRate(), frequency.getLength());
     }
 
     public int getLength() {
@@ -83,7 +85,11 @@ public class FrequencyResponseConfig implements Serializable {
         }
 
         public double getRate() {
-            return this.frequency * 1024;
+            return this.frequency * 1000;
+        }
+
+        public int getLength() {
+            return (int) (Math.pow(2, Math.ceil(Math.log(getRate()) / Math.log(2))));
         }
     }
 

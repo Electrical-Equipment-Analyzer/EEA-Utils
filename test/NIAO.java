@@ -1,6 +1,7 @@
 
 import edu.sju.ee98.daq.core.config.AnalogConfig;
 import edu.sju.ee98.ni.daqmx.LoadLibraryException;
+import edu.sju.ee98.ni.daqmx.analog.AnalogGenerator;
 import edu.sju.ee98.ni.daqmx.analog.ContGenIntClk;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -16,15 +17,20 @@ import java.util.logging.Logger;
 public class NIAO {
 
     public static void main(String[] args) {
-        AnalogConfig config = new AnalogConfig("Dev1/ao0", -10.0, 10.0, 1000.0, 1000);
-
-        double[] data = new double[(int) config.getLength()];
-        for (int x = 0; x < data.length; x++) {
-            data[x] = Math.sin(x / config.getRate() * 2 * Math.PI) * 2;
-        }
-
-        ContGenIntClk contGenIntClk = new ContGenIntClk(config, config, data);
+        double frequency = 1000;
+        double rate = frequency * 1000.0;
+        int length = (int) (rate * 1.024);
+        AnalogConfig ac = new AnalogConfig("Dev1/ao0", -10.0, 10.0, rate, length);
+        AnalogGenerator ag = new AnalogGenerator(rate, length, 2, frequency, 0);
+        ContGenIntClk contGenIntClk = new ContGenIntClk(ac, ac, ag.getData());
             contGenIntClk.write();
-
+            contGenIntClk.start();
+        try {
+            Thread.sleep(1000000);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(NIAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        
     }
 }
