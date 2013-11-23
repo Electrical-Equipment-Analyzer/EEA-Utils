@@ -17,10 +17,11 @@ import java.util.logging.Logger;
 public class NIAO {
 
     public static void main(String[] args) {
-        double frequency = 1000;
+        double frequency = 100;
         double rate = frequency * 1000.0;
-        int length = (int) (rate * 1.024);
+        int length = 1024;
         AnalogConfig ac = new AnalogConfig("Dev1/ao0", -10.0, 10.0, rate, length);
+        System.out.println(ac);
         AnalogGenerator ag = new AnalogGenerator(rate, length, 2, frequency, 0);
         ContGenIntClk contGenIntClk = new ContGenIntClk(ac, ac, ag.getData());
             contGenIntClk.write();
@@ -32,5 +33,10 @@ public class NIAO {
         }
         
         
+    }
+    
+    
+    private static int configLength(double frequency) {
+        return (int) (Math.pow(2, Math.ceil(Math.log(frequency * 1000) / Math.log(2))));
     }
 }
