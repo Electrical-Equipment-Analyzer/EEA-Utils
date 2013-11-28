@@ -1,6 +1,6 @@
 
 import edu.sju.ee98.daq.core.config.AnalogConfig;
-import edu.sju.ee98.ni.daqmx.LoadLibraryException;
+import edu.sju.ee.jni.LoadLibraryException;
 import edu.sju.ee98.ni.daqmx.analog.AnalogGenerator;
 import edu.sju.ee98.ni.daqmx.analog.ContGenIntClk;
 import java.util.logging.Level;
