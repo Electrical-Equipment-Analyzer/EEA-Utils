@@ -6,8 +6,6 @@ package edu.sju.ee98.daq.core.config;
 
 import edu.sju.ee.ni.daqmx.DAQmx;
 import edu.sju.ee98.daq.core.data.ComplexWave;
-import edu.sju.ee98.ni.daqmx.analog.AcqIntClk;
-import edu.sju.ee98.ni.daqmx.analog.ContGenIntClk;
 import edu.sju.ee98.ni.daqmx.analog.AnalogGenerator;
 import java.io.Serializable;
 import java.util.Arrays;
@@ -31,7 +29,7 @@ public class FrequencyResponseConfig implements Serializable {
     private int length;
     //
     private int generateLength = 1000;
-    
+
     public FrequencyResponseConfig(String generateChannel, String responseChannel, double voltage, double minFrequency, double maxFrequrncy, int length) {
         this.generateChannel = generateChannel;
         this.responseChannel = responseChannel;
@@ -43,23 +41,22 @@ public class FrequencyResponseConfig implements Serializable {
         this.baseFrequency = (this.maxFrequrncy - this.minFrequency) / length;
     }
 
-    public double getFrequency(int step) {
+    private double getFrequency(int step) {
         return Math.pow(10, minFrequency + (baseFrequency * step));
     }
 
-    public ContGenIntClk createOutput(double frequency) {
+    public DAQmx createGenerate(double frequency) throws Exception {
         AnalogGenerator analogGenerator = new AnalogGenerator(frequency * 100, generateLength, this.voltage, frequency);
-        AnalogConfig outputConfig = getOutputConfig(frequency);
-//        System.out.println(outputConfig);
-        return new ContGenIntClk(outputConfig, outputConfig, analogGenerator.getData());
-    }
-    
-    public FrequencyResponse createResponse(double frequency) throws Exception {
-        return new FrequencyResponse(frequency);
+        DAQmx generate = new DAQmx();
+        generate.createTask("");
+        generate.createAOVoltageChan(generateChannel, "", -10, 10, DAQmx.Val_Volts, null);
+        generate.cfgSampClkTiming("", frequency * 100, DAQmx.Val_Rising, DAQmx.Val_FiniteSamps, generateLength);
+        generate.writeAnalogF64(generateLength, false, 10.0, DAQmx.Val_GroupByChannel, analogGenerator.getData());
+        return generate;
     }
 
-    public AnalogConfig getOutputConfig(double frequency) {
-        return new AnalogConfig(generateChannel, -10, 10, frequency * 100, generateLength);
+    public FrequencyResponse createResponse(double frequency) throws Exception {
+        return new FrequencyResponse(frequency);
     }
 
     public int getLength() {
@@ -70,22 +67,21 @@ public class FrequencyResponseConfig implements Serializable {
     public String toString() {
         return "FrequencyResponseConfig{" + "inputChannel=" + responseChannel + ", outputChannel=" + generateChannel + ", voltage=" + voltage + ", minFrequency=" + minFrequency + ", maxFrequrncy=" + maxFrequrncy + ", baseFrequency=" + baseFrequency + ", length=" + length + '}';
     }
-    
-    
+
     public Complex[] process() {
         Complex[] data = new Complex[this.length];
-        ContGenIntClk out;
+        DAQmx generate;
         FrequencyResponseConfig.FrequencyResponse createResponse;
         for (int i = 0; i < data.length; i++) {
             try {
                 double frequency = this.getFrequency(i);
-                out = this.createOutput(frequency);
-                out.write();
-                out.start();
+                generate = this.createGenerate(frequency);
+                generate.startTask();
                 createResponse = this.createResponse(frequency);
                 Complex H = createResponse.H();
                 data[i] = H;
-                out.stop();
+                generate.stopTask();
+                generate.clearTask();
             } catch (Exception ex) {
                 Logger.getLogger(FrequencyResponseConfig.class.getName()).log(Level.SEVERE, null, ex);
             }

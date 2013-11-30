@@ -20,7 +20,7 @@ public class Wave {
         this.rate = rate;
         this.data = data;
     }
-    
+
     public Wave(double rate, Complex[] data) {
         this.rate = rate;
         this.data = data;
