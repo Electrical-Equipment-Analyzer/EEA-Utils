@@ -11,6 +11,8 @@ import edu.sju.ee98.ni.daqmx.analog.ContGenIntClk;
 import edu.sju.ee98.ni.daqmx.analog.AnalogGenerator;
 import java.io.Serializable;
 import java.util.Arrays;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.apache.commons.math3.complex.Complex;
 
 /**
@@ -48,15 +50,10 @@ public class FrequencyResponseConfig implements Serializable {
     public ContGenIntClk createOutput(double frequency) {
         AnalogGenerator analogGenerator = new AnalogGenerator(frequency * 100, generateLength, this.voltage, frequency);
         AnalogConfig outputConfig = getOutputConfig(frequency);
-        System.out.println(outputConfig);
+//        System.out.println(outputConfig);
         return new ContGenIntClk(outputConfig, outputConfig, analogGenerator.getData());
     }
-
-//    public AcqIntClk createInput(double frequency) {
-//        AnalogConfig intputConfig = getIntputConfig(frequency);
-//        System.out.println(intputConfig);
-//        return new AcqIntClk(intputConfig, intputConfig);
-//    }
+    
     public FrequencyResponse createResponse(double frequency) throws Exception {
         return new FrequencyResponse(frequency);
     }
@@ -65,21 +62,35 @@ public class FrequencyResponseConfig implements Serializable {
         return new AnalogConfig(generateChannel, -10, 10, frequency * 100, generateLength);
     }
 
-//    public AnalogConfig getIntputConfig(double frequency) {
-//        return new AnalogConfig(inputChannel, -42, 42, frequency * 100, configLength(frequency));
-//    }
     public int getLength() {
         return this.length;
     }
 
-//    private static int configLength(double frequency) {
-//        return 1024;
-////        return (int) (Math.pow(2, Math.ceil(Math.log(frequency * 1000) / Math.log(2))));
-//    }
-
     @Override
     public String toString() {
         return "FrequencyResponseConfig{" + "inputChannel=" + responseChannel + ", outputChannel=" + generateChannel + ", voltage=" + voltage + ", minFrequency=" + minFrequency + ", maxFrequrncy=" + maxFrequrncy + ", baseFrequency=" + baseFrequency + ", length=" + length + '}';
+    }
+    
+    
+    public Complex[] process() {
+        Complex[] data = new Complex[this.length];
+        ContGenIntClk out;
+        FrequencyResponseConfig.FrequencyResponse createResponse;
+        for (int i = 0; i < data.length; i++) {
+            try {
+                double frequency = this.getFrequency(i);
+                out = this.createOutput(frequency);
+                out.write();
+                out.start();
+                createResponse = this.createResponse(frequency);
+                Complex H = createResponse.H();
+                data[i] = H;
+                out.stop();
+            } catch (Exception ex) {
+                Logger.getLogger(FrequencyResponseConfig.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        return data;
     }
 
     public class FrequencyResponse {
