@@ -5,7 +5,7 @@
  */
 package edu.sju.ee98.daq.core.data;
 
-import edu.sju.ee.daq.core.math.ComplexArrays;
+import edu.sju.ee.daq.core.math.ComplexArray;
 import org.apache.commons.math3.complex.Complex;
 import org.apache.commons.math3.complex.ComplexUtils;
 import org.apache.commons.math3.transform.DftNormalization;
@@ -37,28 +37,28 @@ public class Wave {
 
     public double[] getReal() {
         if (this.data instanceof Complex[]) {
-            return ComplexArrays.getReal((Complex[]) data);
+            return ComplexArray.getReal((Complex[]) data);
         }
         return (double[]) data;
     }
 
     public double[] getImaginary() {
         if (this.data instanceof Complex[]) {
-            return ComplexArrays.getImaginary((Complex[]) data);
+            return ComplexArray.getImaginary((Complex[]) data);
         }
         return null;
     }
 
     public double[] getAbsolute() {
         if (this.data instanceof Complex[]) {
-            return ComplexArrays.getAbsolute((Complex[]) data);
+            return ComplexArray.getAbsolute((Complex[]) data);
         }
         return null;
     }
 
     public double[] getArgument() {
         if (this.data instanceof Complex[]) {
-            return ComplexArrays.getArgument((Complex[]) data);
+            return ComplexArray.getArgument((Complex[]) data);
         }
         return null;
     }

@@ -11,7 +11,7 @@ import org.apache.commons.math3.complex.Complex;
  *
  * @author Leo
  */
-public class ComplexArrays {
+public class ComplexArray {
 
     public static double[] getReal(Complex data[]) {
         double[] temp = new double[data.length];
