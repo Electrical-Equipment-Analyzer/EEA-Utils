@@ -2,25 +2,25 @@
  * Copyright (c) 2013, St. John's University and/or its affiliates. All rights reserved.
  * Department of Electrical Engineering.
  */
-package edu.sju.ee98.daq.core.config;
+package edu.sju.ee98.daq.core.function;
 
-import edu.sju.ee98.ni.daqmx.config.NIClkTiming;
-import edu.sju.ee98.ni.daqmx.config.NIVoltageChan;
+import edu.sju.ee.ni.daqmx.DAQmx;
+import edu.sju.ee98.daq.core.data.Wave;
 import java.io.Serializable;
 
 /**
  *
  * @author 102m05008
  */
-public class AnalogConfig implements NIVoltageChan, NIClkTiming, Serializable {
+public class AnalogVoltage implements Serializable {
 
     private String physicalChannel;
     private double minVoltage;
     private double maxVoltage;
     private double rate;
-    private long length;
+    private int length;
 
-    public AnalogConfig(String physicalChannel, double minVoltage, double maxVoltage, double rate, long length) {
+    public AnalogVoltage(String physicalChannel, double minVoltage, double maxVoltage, double rate, int length) {
         this.physicalChannel = physicalChannel;
         this.minVoltage = minVoltage;
         this.maxVoltage = maxVoltage;
@@ -28,27 +28,22 @@ public class AnalogConfig implements NIVoltageChan, NIClkTiming, Serializable {
         this.length = length;
     }
 
-    @Override
     public String getPhysicalChannel() {
         return physicalChannel;
     }
 
-    @Override
     public double getMinVoltage() {
         return minVoltage;
     }
 
-    @Override
     public double getMaxVoltage() {
         return maxVoltage;
     }
 
-    @Override
     public double getRate() {
         return rate;
     }
 
-    @Override
     public long getLength() {
         return length;
     }
@@ -56,5 +51,18 @@ public class AnalogConfig implements NIVoltageChan, NIClkTiming, Serializable {
     @Override
     public String toString() {
         return "NIAnalogConfig{" + "physicalChannel=" + physicalChannel + ", minVoltage=" + minVoltage + ", maxVoltage=" + maxVoltage + ", rate=" + rate + ", length=" + length + '}';
+    }
+
+    public Wave process() throws Exception {
+        DAQmx analog = new DAQmx();
+        analog.createTask("");
+        analog.createAIVoltageChan(physicalChannel, "", DAQmx.Val_Cfg_Default, minVoltage, maxVoltage, DAQmx.Val_Volts, null);
+        analog.cfgSampClkTiming("", rate, DAQmx.Val_Rising, DAQmx.Val_FiniteSamps, length);
+        analog.startTask();
+        double data[] = new double[length];
+        analog.readAnalogF64(length, 10, DAQmx.Val_GroupByChannel, data, length, null);
+        analog.stopTask();
+        analog.clearTask();
+        return new Wave(this.rate, data);
     }
 }

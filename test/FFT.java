@@ -1,5 +1,5 @@
 
-import edu.sju.ee98.ni.daqmx.analog.AnalogGenerator;
+import edu.sju.ee.ni.math.WaveGenerator;
 import java.util.Arrays;
 import org.apache.commons.math3.complex.Complex;
 import org.apache.commons.math3.transform.DftNormalization;
@@ -21,7 +21,7 @@ public class FFT {
         int length = 1024;
         double frequency = 100;
         double position = rate / frequency / 360 * 0;
-        AnalogGenerator wave = new AnalogGenerator(rate, length, 1, frequency, position);
+        WaveGenerator wave = new WaveGenerator(rate, length, 1, frequency, position);
 
         System.out.println(Arrays.toString(wave.getData()));
         System.out.println(max(wave.getData()));

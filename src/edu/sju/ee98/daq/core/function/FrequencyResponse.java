@@ -5,8 +5,8 @@
 package edu.sju.ee98.daq.core.function;
 
 import edu.sju.ee.ni.daqmx.DAQmx;
-import edu.sju.ee98.daq.core.data.ComplexWave;
-import edu.sju.ee98.ni.daqmx.analog.AnalogGenerator;
+import edu.sju.ee98.daq.core.data.Wave;
+import edu.sju.ee.ni.math.WaveGenerator;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.logging.Level;
@@ -46,7 +46,7 @@ public class FrequencyResponse implements Serializable {
     }
 
     public DAQmx createGenerate(double frequency) throws Exception {
-        AnalogGenerator analogGenerator = new AnalogGenerator(frequency * 100, generateLength, this.voltage, frequency);
+        WaveGenerator analogGenerator = new WaveGenerator(frequency * 100, generateLength, this.voltage, frequency);
         DAQmx generate = new DAQmx();
         generate.createTask("");
         generate.createAOVoltageChan(generateChannel, "", -10, 10, DAQmx.Val_Volts, null);
@@ -105,8 +105,8 @@ public class FrequencyResponse implements Serializable {
         public Complex H() throws Exception {
             double data[] = new double[2048];
             task.readAnalogF64(1024, 10, DAQmx.Val_GroupByChannel, data, data.length, null);
-            Complex in = new ComplexWave(frequency * 100, Arrays.copyOfRange(data, 0, 1024)).getMainFrequency(frequency);
-            Complex out = new ComplexWave(frequency * 100, Arrays.copyOfRange(data, 1024, 2048)).getMainFrequency(frequency);
+            Complex in = new Wave(frequency * 100, Arrays.copyOfRange(data, 0, 1024)).getValue(frequency);
+            Complex out = new Wave(frequency * 100, Arrays.copyOfRange(data, 1024, 2048)).getValue(frequency);
 
             task.stopTask();
             task.clearTask();
