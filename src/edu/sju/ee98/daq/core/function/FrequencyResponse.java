@@ -2,7 +2,7 @@
  * Copyright (c) 2013, St. John's University and/or its affiliates. All rights reserved.
  * Department of Electrical Engineering.
  */
-package edu.sju.ee98.daq.core.config;
+package edu.sju.ee98.daq.core.function;
 
 import edu.sju.ee.ni.daqmx.DAQmx;
 import edu.sju.ee98.daq.core.data.ComplexWave;
@@ -17,7 +17,7 @@ import org.apache.commons.math3.complex.Complex;
  *
  * @author 102m05008
  */
-public class FrequencyResponseConfig implements Serializable {
+public class FrequencyResponse implements Serializable {
 
     private String generateChannel;
     private String responseChannel;
@@ -30,7 +30,7 @@ public class FrequencyResponseConfig implements Serializable {
     //
     private int generateLength = 1000;
 
-    public FrequencyResponseConfig(String generateChannel, String responseChannel, double voltage, double minFrequency, double maxFrequrncy, int length) {
+    public FrequencyResponse(String generateChannel, String responseChannel, double voltage, double minFrequency, double maxFrequrncy, int length) {
         this.generateChannel = generateChannel;
         this.responseChannel = responseChannel;
         this.voltage = voltage;
@@ -55,8 +55,8 @@ public class FrequencyResponseConfig implements Serializable {
         return generate;
     }
 
-    public FrequencyResponse createResponse(double frequency) throws Exception {
-        return new FrequencyResponse(frequency);
+    public Response createResponse(double frequency) throws Exception {
+        return new Response(frequency);
     }
 
     public int getLength() {
@@ -71,7 +71,7 @@ public class FrequencyResponseConfig implements Serializable {
     public Complex[] process() {
         Complex[] data = new Complex[this.length];
         DAQmx generate;
-        FrequencyResponseConfig.FrequencyResponse createResponse;
+        FrequencyResponse.Response createResponse;
         for (int i = 0; i < data.length; i++) {
             try {
                 double frequency = this.getFrequency(i);
@@ -83,18 +83,18 @@ public class FrequencyResponseConfig implements Serializable {
                 generate.stopTask();
                 generate.clearTask();
             } catch (Exception ex) {
-                Logger.getLogger(FrequencyResponseConfig.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(FrequencyResponse.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
         return data;
     }
 
-    public class FrequencyResponse {
+    private class Response {
 
         private DAQmx task = new DAQmx();
         private double frequency;
 
-        public FrequencyResponse(double frequency) throws Exception {
+        public Response(double frequency) throws Exception {
             this.frequency = frequency;
             task.createTask("");
             task.createAIVoltageChan(responseChannel, "", DAQmx.Val_Cfg_Default, -42.0, 42.0, DAQmx.Val_Volts, null);
