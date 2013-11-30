@@ -44,47 +44,6 @@ public class ComplexWave implements NIWaveData {
         return data;
     }
 
-    protected double[] getRealArray() {
-        double[] temp = new double[data.length];
-        for (int i = 0; i < data.length; i++) {
-            temp[i] = data[i].getReal();
-        }
-        return temp;
-    }
-
-    protected double[] getImaginaryArray() {
-        double[] temp = new double[data.length];
-        for (int i = 0; i < data.length; i++) {
-            temp[i] = data[i].getImaginary();
-        }
-        return temp;
-    }
-
-    protected double[] getAbsoluteArray() {
-        double[] temp = new double[data.length];
-        for (int i = 0; i < data.length; i++) {
-            temp[i] = data[i].abs();
-        }
-        return temp;
-    }
-
-    protected double[] getArgumentArray() {
-        double[] temp = new double[data.length];
-        for (int i = 0; i < data.length; i++) {
-            temp[i] = data[i].getArgument();
-        }
-        return temp;
-    }
-
-    protected double[] getZZArray() {
-        double[] temp = new double[data.length];
-        for (int i = 0; i < data.length; i++) {
-            temp[i] = Math.atan(data[i].getImaginary() / data[i].getReal());
-//            temp[i] = Math.atan2(data[i].getReal(), data[i].getImaginary());
-        }
-        return temp;
-    }
-
     public Complex getMainFrequency(double frequency) {
         FastFourierTransformer fft = new FastFourierTransformer(DftNormalization.STANDARD);
         Complex[] transform = fft.transform(data, TransformType.FORWARD);

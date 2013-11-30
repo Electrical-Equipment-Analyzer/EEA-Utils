@@ -1,6 +1,5 @@
 package edu.sju.ee.daq.core.math;
 
-
 import org.apache.commons.math3.complex.Complex;
 
 /*
@@ -14,12 +13,36 @@ import org.apache.commons.math3.complex.Complex;
  */
 public class ComplexArrays {
 
-    public static double[] getAbsolute(Complex data[]) {
-        double absolute[] = new double[data.length];
-        for (int i = 0; i < absolute.length; i++) {
-            absolute[i] = 20 * Math.log10(data[i].abs());
+    public static double[] getReal(Complex data[]) {
+        double[] temp = new double[data.length];
+        for (int i = 0; i < data.length; i++) {
+            temp[i] = data[i].getReal();
         }
-        return absolute;
+        return temp;
+    }
+
+    public static double[] getImaginary(Complex data[]) {
+        double[] temp = new double[data.length];
+        for (int i = 0; i < data.length; i++) {
+            temp[i] = data[i].getImaginary();
+        }
+        return temp;
+    }
+
+    public static double[] getAbsolute(Complex data[]) {
+        double temp[] = new double[data.length];
+        for (int i = 0; i < temp.length; i++) {
+            temp[i] = data[i].abs();
+        }
+        return temp;
+    }
+
+    public static double[] getArgument(Complex data[]) {
+        double[] temp = new double[data.length];
+        for (int i = 0; i < data.length; i++) {
+            temp[i] = data[i].getArgument();
+        }
+        return temp;
     }
 
 }
