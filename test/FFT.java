@@ -17,9 +17,9 @@ import org.apache.commons.math3.transform.TransformType;
 public class FFT {
 
     public static void main(String[] args) {
-        double rate = 10240;
         int length = 1024;
-        double frequency = 100;
+        double frequency = 1000;
+        double rate = 100 * frequency;
         double position = rate / frequency / 360 * 0;
         WaveGenerator wave = new WaveGenerator(rate, length, 1, frequency, position);
 

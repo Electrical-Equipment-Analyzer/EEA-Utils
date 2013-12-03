@@ -46,11 +46,11 @@ public class FrequencyResponse implements Serializable {
     }
 
     public DAQmx createGenerate(double frequency) throws Exception {
-        WaveGenerator analogGenerator = new WaveGenerator(frequency * 100, generateLength, this.voltage, frequency);
+        WaveGenerator analogGenerator = new WaveGenerator(frequency * 20, generateLength, this.voltage, frequency);
         DAQmx generate = new DAQmx();
         generate.createTask("");
         generate.createAOVoltageChan(generateChannel, "", -10, 10, DAQmx.Val_Volts, null);
-        generate.cfgSampClkTiming("", frequency * 100, DAQmx.Val_Rising, DAQmx.Val_FiniteSamps, generateLength);
+        generate.cfgSampClkTiming("", frequency * 20, DAQmx.Val_Rising, DAQmx.Val_ContSamps, generateLength);
         generate.writeAnalogF64(generateLength, false, 10.0, DAQmx.Val_GroupByChannel, analogGenerator.getData());
         return generate;
     }
@@ -77,6 +77,7 @@ public class FrequencyResponse implements Serializable {
                 double frequency = this.getFrequency(i);
                 generate = this.createGenerate(frequency);
                 generate.startTask();
+//                Thread.sleep(10);
                 createResponse = this.createResponse(frequency);
                 Complex H = createResponse.H();
                 data[i] = H;
@@ -97,20 +98,21 @@ public class FrequencyResponse implements Serializable {
         public Response(double frequency) throws Exception {
             this.frequency = frequency;
             task.createTask("");
-            task.createAIVoltageChan(responseChannel, "", DAQmx.Val_Cfg_Default, -42.0, 42.0, DAQmx.Val_Volts, null);
-            task.cfgSampClkTiming("", frequency * 100, DAQmx.Val_Rising, DAQmx.Val_FiniteSamps, 1024);
+            task.createAIVoltageChan(responseChannel, "", DAQmx.Val_Cfg_Default, -10.0, 10.0, DAQmx.Val_Volts, null);
+            task.cfgSampClkTiming("", frequency * 20, DAQmx.Val_Rising, DAQmx.Val_FiniteSamps, 1024);
             task.startTask();
         }
 
         public Complex H() throws Exception {
             double data[] = new double[2048];
             task.readAnalogF64(1024, 10, DAQmx.Val_GroupByChannel, data, data.length, null);
-            Complex in = new Wave(frequency * 100, Arrays.copyOfRange(data, 0, 1024)).getValue(frequency);
-            Complex out = new Wave(frequency * 100, Arrays.copyOfRange(data, 1024, 2048)).getValue(frequency);
+            Complex in = new Wave(frequency * 20, Arrays.copyOfRange(data, 0, 1024)).getValue(frequency);
+            Complex out = new Wave(frequency * 20, Arrays.copyOfRange(data, 1024, 2048)).getValue(frequency);
 
             task.stopTask();
             task.clearTask();
-
+//            System.out.println(Arrays.toString(data));
+            System.out.println("H=" + out + "/" + out);
             return out.divide(in);
         }
 
