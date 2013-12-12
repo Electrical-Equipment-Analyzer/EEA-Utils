@@ -2,7 +2,7 @@
  * Copyright (c) 2013, St. John's University and/or its affiliates. All rights reserved.
  * Department of Electrical Engineering.
  */
-package edu.sju.ee98.daq.core.function;
+package edu.sju.ee98.daq.core.frequency.response;
 
 import edu.sju.ee.ni.daqmx.DAQmx;
 import edu.sju.ee98.daq.core.data.Wave;
