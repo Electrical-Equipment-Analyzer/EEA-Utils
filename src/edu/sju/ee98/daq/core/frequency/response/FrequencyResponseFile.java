@@ -23,6 +23,18 @@ public class FrequencyResponseFile implements Serializable {
         this.out = out;
     }
 
+    public FrequencyResponseConfig getConfig() {
+        return config;
+    }
+
+    public Complex[] getIn() {
+        return in;
+    }
+
+    public Complex[] getOut() {
+        return out;
+    }
+
     public void save(String url) {
 
     }

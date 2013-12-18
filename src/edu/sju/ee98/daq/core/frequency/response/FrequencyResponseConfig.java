@@ -77,6 +77,11 @@ public class FrequencyResponseConfig implements Serializable {
         this.length = length;
     }
 
+    public double getFrequency(int step) {
+        double baseFrequency = (Math.log10(maxFrequrncy) - Math.log10(minFrequency)) / length;
+        return Math.pow(10, Math.log10(maxFrequrncy) + (baseFrequency * step));
+    }
+
     @Override
     public String toString() {
         return "FrequencyResponseConfig{" + "generateChannel=" + generateChannel + ", responseChannel=" + responseChannel + ", voltage=" + voltage + ", minFrequency=" + minFrequency + ", maxFrequrncy=" + maxFrequrncy + ", length=" + length + '}';

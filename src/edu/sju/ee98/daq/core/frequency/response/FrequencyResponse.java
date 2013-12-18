@@ -27,11 +27,11 @@ public class FrequencyResponse {
     public FrequencyResponse(FrequencyResponseConfig config) {
         this.config = config;
 
-        this.baseFrequency = (this.config.getMaxFrequrncy() - this.config.getMinFrequency()) / this.config.getLength();
+        this.baseFrequency = (Math.log10(this.config.getMaxFrequrncy()) - Math.log10(this.config.getMinFrequency())) / this.config.getLength();
     }
 
     private double getFrequency(int step) {
-        return Math.pow(10, this.config.getMinFrequency() + (baseFrequency * step));
+        return Math.pow(10, Math.log10(this.config.getMinFrequency()) + (baseFrequency * step));
     }
 
     public DAQmx createGenerate(double frequency) throws Exception {
