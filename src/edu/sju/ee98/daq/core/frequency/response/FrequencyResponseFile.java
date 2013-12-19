@@ -4,6 +4,7 @@
  */
 package edu.sju.ee98.daq.core.frequency.response;
 
+import edu.sju.ee98.daq.core.data.DAQData;
 import java.io.Serializable;
 import org.apache.commons.math3.complex.Complex;
 
@@ -11,7 +12,7 @@ import org.apache.commons.math3.complex.Complex;
  *
  * @author 薛聿明
  */
-public class FrequencyResponseFile implements Serializable {
+public class FrequencyResponseFile extends DAQData implements Serializable {
 
     private FrequencyResponseConfig config;
     private Complex[] in;
@@ -33,13 +34,5 @@ public class FrequencyResponseFile implements Serializable {
 
     public Complex[] getOut() {
         return out;
-    }
-
-    public void save(String url) {
-
-    }
-
-    public void open(String url) {
-
     }
 }
