@@ -2,10 +2,10 @@
  * Copyright (c) 2013, St. John's University and/or its affiliates. All rights reserved.
  * Department of Electrical Engineering.
  */
-package edu.sju.ee.eea.core.function;
+package tw.edu.sju.ee.eea.core.function;
 
-import edu.sju.ee.eea.core.data.Wave;
-import edu.sju.ee.eea.jni.daqmx.DAQmx;
+import tw.edu.sju.ee.eea.core.data.Wave;
+import tw.edu.sju.ee.eea.jni.daqmx.DAQmx;
 import java.io.Serializable;
 
 /**

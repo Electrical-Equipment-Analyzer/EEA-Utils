@@ -2,9 +2,9 @@
  * Copyright (c) 2013, St. John's University and/or its affiliates. All rights reserved.
  * Department of Electrical Engineering.
  */
-package edu.sju.ee.eea.core.frequency.response;
+package tw.edu.sju.ee.eea.core.frequency.response;
 
-import edu.sju.ee.eea.core.data.DAQData;
+import tw.edu.sju.ee.eea.core.data.DAQData;
 import java.io.Serializable;
 import org.apache.commons.math3.complex.Complex;
 

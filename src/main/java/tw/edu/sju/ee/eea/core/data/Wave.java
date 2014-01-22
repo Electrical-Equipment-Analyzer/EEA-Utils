@@ -3,9 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package edu.sju.ee.eea.core.data;
+package tw.edu.sju.ee.eea.core.data;
 
-import edu.sju.ee.eea.core.math.ComplexArray;
+import tw.edu.sju.ee.eea.core.math.ComplexArray;
 import org.apache.commons.math3.complex.Complex;
 import org.apache.commons.math3.complex.ComplexUtils;
 import org.apache.commons.math3.transform.DftNormalization;

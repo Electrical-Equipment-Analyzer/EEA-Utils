@@ -1,4 +1,4 @@
-package edu.sju.ee.eea.core;
+package tw.edu.sju.ee.eea.core;
 
 /**
  * Hello world!

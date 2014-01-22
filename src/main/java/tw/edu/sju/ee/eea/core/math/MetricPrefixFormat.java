@@ -2,7 +2,7 @@
  * Copyright (c) 2013, St. John's University and/or its affiliates. All rights reserved.
  * Department of Electrical Engineering.
  */
-package edu.sju.ee.eea.core.math;
+package tw.edu.sju.ee.eea.core.math;
 
 import java.text.DecimalFormat;
 import java.text.FieldPosition;

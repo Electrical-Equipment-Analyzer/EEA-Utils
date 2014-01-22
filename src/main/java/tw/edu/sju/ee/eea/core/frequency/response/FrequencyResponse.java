@@ -2,11 +2,11 @@
  * Copyright (c) 2013, St. John's University and/or its affiliates. All rights reserved.
  * Department of Electrical Engineering.
  */
-package edu.sju.ee.eea.core.frequency.response;
+package tw.edu.sju.ee.eea.core.frequency.response;
 
-import edu.sju.ee.eea.core.data.Wave;
-import edu.sju.ee.eea.jni.daqmx.DAQmx;
-import edu.sju.ee.eea.math.WaveGenerator;
+import tw.edu.sju.ee.eea.core.data.Wave;
+import tw.edu.sju.ee.eea.jni.daqmx.DAQmx;
+import tw.edu.sju.ee.eea.math.WaveGenerator;
 import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
