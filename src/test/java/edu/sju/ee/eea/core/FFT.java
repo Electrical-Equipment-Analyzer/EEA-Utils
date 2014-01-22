@@ -1,7 +1,7 @@
 package edu.sju.ee.eea.core;
 
 
-import edu.sju.ee.eea.math.WaveGenerator;
+import tw.edu.sju.ee.eea.math.WaveGenerator;
 import java.util.Arrays;
 import org.apache.commons.math3.complex.Complex;
 import org.apache.commons.math3.transform.DftNormalization;
