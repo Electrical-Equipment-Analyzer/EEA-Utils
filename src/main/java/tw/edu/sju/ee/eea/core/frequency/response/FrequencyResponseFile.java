@@ -6,6 +6,8 @@ package tw.edu.sju.ee.eea.core.frequency.response;
 
 import tw.edu.sju.ee.eea.core.data.EEAFile;
 import java.io.Serializable;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import org.apache.commons.math3.complex.Complex;
 
 /**
@@ -34,5 +36,13 @@ public class FrequencyResponseFile extends EEAFile implements Serializable {
 
     public Complex[] getOut() {
         return out;
+    }
+
+    public Map<Double, Complex> getGain() {
+        LinkedHashMap<Double, Complex> map = new LinkedHashMap<Double, Complex>();
+        for (int i = 0; i < config.getLength(); i++) {
+            map.put(config.getFrequency(i), out[i].divide(in[i]));
+        }
+        return map;
     }
 }
