@@ -79,7 +79,7 @@ public class FrequencyResponseConfig implements Serializable {
 
     public double getFrequency(int step) {
         double baseFrequency = (Math.log10(maxFrequrncy) - Math.log10(minFrequency)) / length;
-        return Math.pow(10, Math.log10(maxFrequrncy) + (baseFrequency * step));
+        return Math.pow(10, Math.log10(minFrequency) + (baseFrequency * step));
     }
 
     @Override

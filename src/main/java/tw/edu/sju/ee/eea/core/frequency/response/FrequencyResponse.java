@@ -5,12 +5,15 @@
 package tw.edu.sju.ee.eea.core.frequency.response;
 
 import tw.edu.sju.ee.eea.core.data.Wave;
-import tw.edu.sju.ee.eea.jni.daqmx.DAQmx;
-import tw.edu.sju.ee.eea.math.WaveGenerator;
 import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.commons.math3.complex.Complex;
+import org.apache.commons.math3.complex.ComplexUtils;
+import tw.edu.sju.ee.eea.jni.fgen.NIFgen;
+import tw.edu.sju.ee.eea.jni.fgen.NIFgenException;
+import tw.edu.sju.ee.eea.jni.scope.NIScope;
+import tw.edu.sju.ee.eea.jni.scope.NIScopeException;
 
 /**
  *
@@ -33,17 +36,20 @@ public class FrequencyResponse {
         return Math.pow(10, Math.log10(this.config.getMinFrequency()) + (baseFrequency * step));
     }
 
-    public DAQmx createGenerate(double frequency) throws Exception {
-        WaveGenerator analogGenerator = new WaveGenerator(frequency * 20, generateLength, this.config.getVoltage(), frequency);
-        DAQmx generate = new DAQmx();
-        generate.createTask("");
-        generate.createAOVoltageChan(this.config.getGenerateChannel(), "", -10, 10, DAQmx.Val_Volts, null);
-        generate.cfgSampClkTiming("", frequency * 20, DAQmx.Val_Rising, DAQmx.Val_ContSamps, generateLength);
-        generate.writeAnalogF64(generateLength, false, 10.0, DAQmx.Val_GroupByChannel, analogGenerator.getData());
-        return generate;
+    public NIFgen createGenerate(double frequency) throws NIFgenException {
+        NIFgen niFgen = new NIFgen();
+        //Initialize the session
+        niFgen.init(this.config.getGenerateChannel(), true, true);
+        //Configure the active channels for the session
+        niFgen.configureChannels("0");
+        //Configure output for standard function mode
+        niFgen.configureOutputMode(NIFgen.VAL_OUTPUT_FUNC);
+        //Configure the standard function to generate
+        niFgen.configureStandardWaveform("0", NIFgen.VAL_WFM_SINE, this.config.getVoltage(), 0, frequency, 0);
+        return niFgen;
     }
 
-    public Response createResponse(double frequency) throws Exception {
+    public Response createResponse(double frequency) throws NIScopeException {
         return new Response(frequency);
     }
 
@@ -55,24 +61,29 @@ public class FrequencyResponse {
         return "FrequencyResponse{" + "config=" + config + ", baseFrequency=" + baseFrequency + ", generateLength=" + generateLength + '}';
     }
 
-    public FrequencyResponseFile process() {
+    public FrequencyResponseFile process() throws NIFgenException, NIScopeException {
         Complex[] input = new Complex[this.config.getLength()];
         Complex[] output = new Complex[this.config.getLength()];
-        DAQmx generate;
-        Response response;
+        NIFgen niFgen = null;
+        Response response = null;
         for (int i = 0; i < this.config.getLength(); i++) {
             try {
                 double frequency = this.getFrequency(i);
-                generate = this.createGenerate(frequency);
-                generate.startTask();
-//                Thread.sleep(10);
+                niFgen = this.createGenerate(frequency);
+                niFgen.initiateGeneration();
+//                Thread.sleep(100);
                 response = this.createResponse(frequency);
+                niFgen.abortGeneration();
                 input[i] = response.input;
                 output[i] = response.output;
-                generate.stopTask();
-                generate.clearTask();
-            } catch (Exception ex) {
+            } catch (NIFgenException | NIScopeException ex) {
                 Logger.getLogger(FrequencyResponse.class.getName()).log(Level.SEVERE, null, ex);
+                throw ex;
+//            } catch (InterruptedException ex) {
+//                Logger.getLogger(FrequencyResponse.class.getName()).log(Level.SEVERE, null, ex);
+            } finally {
+                niFgen.close();
+                niFgen = null;
             }
         }
         return new FrequencyResponseFile(config, input, output);
@@ -83,18 +94,40 @@ public class FrequencyResponse {
         private final Complex input;
         private final Complex output;
 
-        public Response(double frequency) throws Exception {
-            DAQmx task = new DAQmx();
-            task.createTask("");
-            task.createAIVoltageChan(config.getResponseChannel(), "", DAQmx.Val_Cfg_Default, -10.0, 10.0, DAQmx.Val_Volts, null);
-            task.cfgSampClkTiming("", frequency * 20, DAQmx.Val_Rising, DAQmx.Val_FiniteSamps, 1024);
-            task.startTask();
-            double data[] = new double[2048];
-            task.readAnalogF64(1024, 10, DAQmx.Val_GroupByChannel, data, data.length, null);
-            input = new Wave(frequency * 20, Arrays.copyOfRange(data, 0, 1024)).getValue(frequency);
-            output = new Wave(frequency * 20, Arrays.copyOfRange(data, 1024, 2048)).getValue(frequency);
-            task.stopTask();
-            task.clearTask();
+        public Response(double frequency) throws NIScopeException {
+            String channelList = "0,1";
+            NIScope niScope = null;
+            try {
+                niScope = new NIScope();
+                niScope.init("PXI1Slot4", false, false);
+                niScope.configureAcquisition(NIScope.VAL_NORMAL);
+                niScope.configureVertical(channelList, 10, 0, NIScope.VAL_DC, 1, true);
+                niScope.configureChanCharacteristics(channelList, NIScope.VAL_1_MEG_OHM, 0);
+                niScope.configureHorizontalTiming(frequency * 128, 1024, 50.0, 1, true);
+                niScope.setAttributeViBoolean(channelList, NIScope.ATTR_ENABLE_TIME_INTERLEAVED_SAMPLING, false);
+                niScope.configureTriggerImmediate();
+                niScope.initiateAcquisition();
+
+                int actualNumWfms = niScope.actualNumWfms(channelList);
+                int actualRecordLength = niScope.actualRecordLength();
+                NIScope.WFMInfo wfmInfo[] = new NIScope.WFMInfo[actualNumWfms];
+                double waveform[] = new double[actualRecordLength * actualNumWfms];
+
+                niScope.fetch(channelList, 5, actualRecordLength, waveform, wfmInfo);
+                double sampleRate = niScope.sampleRate();
+
+                Wave waveIn = new Wave(sampleRate, Arrays.copyOfRange(waveform, 0, 1024));
+                Wave waveOut = new Wave(sampleRate, Arrays.copyOfRange(waveform, actualRecordLength, actualRecordLength +1024));
+
+                input = waveIn.getValue(frequency);
+                output = waveOut.getValue(frequency);
+            } catch (NIScopeException ex) {
+                Logger.getLogger(FrequencyResponse.class.getName()).log(Level.SEVERE, null, ex);
+                throw ex;
+            } finally {
+                niScope.close();
+            }
+            niScope = null;
         }
 
         public Complex getInput() {

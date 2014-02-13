@@ -5,6 +5,7 @@
  */
 package tw.edu.sju.ee.eea.core.data;
 
+import java.util.Arrays;
 import tw.edu.sju.ee.eea.core.math.ComplexArray;
 import org.apache.commons.math3.complex.Complex;
 import org.apache.commons.math3.complex.ComplexUtils;
@@ -70,6 +71,36 @@ public class Wave {
         return ComplexUtils.convertToComplex((double[]) data);
     }
 
+    @Override
+    public String toString() {
+        return "Wave{" + "rate=" + rate + ", max=" + max(getReal()) + ", min=" + min(getReal()) + '}';
+    }
+
+    private double max(double[] data) {
+        double max = data[0];
+        for (int i = 1; i < data.length; i++) {
+            max = Math.max(max, data[i]);
+        }
+        return max;
+    }
+
+    private double min(double[] data) {
+        double min = data[0];
+        for (int i = 1; i < data.length; i++) {
+            min = Math.min(min, data[i]);
+        }
+        return min;
+    }
+    
+    private int find(double value, double[] data) {
+        for (int i = 0; i < data.length; i++) {
+            if (data[i] == value) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
     public Complex getValue(double frequency) {
         FastFourierTransformer fft = new FastFourierTransformer(DftNormalization.STANDARD);
         Complex[] data = null;
@@ -79,7 +110,13 @@ public class Wave {
             data = (Complex[]) this.data;
         }
         Complex[] transform = fft.transform(data, TransformType.FORWARD);
-        int mainF = (int) (frequency * data.length / rate);
+//        System.out.println(data.length);
+//        double max = max(ComplexArray.getAbsolute(transform));
+//        System.out.println(max);
+//        System.out.println(find(max, ComplexArray.getAbsolute(transform)));
+        int mainF = (int) Math.round(frequency * data.length / rate);
+//        System.out.println(frequency * data.length / rate);
+//        System.out.println(mainF);
         return transform[mainF];
     }
 }

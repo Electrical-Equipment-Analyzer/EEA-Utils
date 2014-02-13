@@ -4,7 +4,7 @@
  */
 package tw.edu.sju.ee.eea.core.frequency.response;
 
-import tw.edu.sju.ee.eea.core.data.DAQData;
+import tw.edu.sju.ee.eea.core.data.EEAFile;
 import java.io.Serializable;
 import org.apache.commons.math3.complex.Complex;
 
@@ -12,7 +12,7 @@ import org.apache.commons.math3.complex.Complex;
  *
  * @author 薛聿明
  */
-public class FrequencyResponseFile extends DAQData implements Serializable {
+public class FrequencyResponseFile extends EEAFile implements Serializable {
 
     private FrequencyResponseConfig config;
     private Complex[] in;

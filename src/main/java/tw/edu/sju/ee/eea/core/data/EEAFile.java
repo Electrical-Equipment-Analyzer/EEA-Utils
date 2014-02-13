@@ -20,34 +20,30 @@ import java.util.logging.Logger;
  *
  * @author Leo
  */
-public class DAQData implements Serializable {
+public class EEAFile implements Serializable {
 
-    public void save(File file) {
+    public void write(ObjectOutputStream oo) {
         try {
-            ObjectOutputStream oo = new ObjectOutputStream(new FileOutputStream(file));
             oo.writeObject(this);
             oo.flush();
             oo.close();
-        } catch (FileNotFoundException ex) {
-            Logger.getLogger(DAQData.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
-            Logger.getLogger(DAQData.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(EEAFile.class.getName()).log(Level.SEVERE, null, ex);
         }
 
     }
 
-    public static DAQData open(File file) {
+    public static EEAFile read(ObjectInputStream oi) {
         try {
-            ObjectInputStream oi = new ObjectInputStream(new FileInputStream(file));
             Object readObject = oi.readObject();
             oi.close();
-            if (readObject instanceof DAQData) {
-                return (DAQData) readObject;
+            if (readObject instanceof EEAFile) {
+                return (EEAFile) readObject;
             }
-        } catch (IOException ex) {
-            Logger.getLogger(DAQData.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(DAQData.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(EEAFile.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(EEAFile.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
     }
