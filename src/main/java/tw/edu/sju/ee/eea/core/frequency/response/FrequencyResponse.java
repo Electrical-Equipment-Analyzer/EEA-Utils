@@ -9,7 +9,6 @@ import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.commons.math3.complex.Complex;
-import org.apache.commons.math3.complex.ComplexUtils;
 import tw.edu.sju.ee.eea.jni.fgen.NIFgen;
 import tw.edu.sju.ee.eea.jni.fgen.NIFgenException;
 import tw.edu.sju.ee.eea.jni.scope.NIScope;
@@ -38,13 +37,9 @@ public class FrequencyResponse {
 
     public NIFgen createGenerate(double frequency) throws NIFgenException {
         NIFgen niFgen = new NIFgen();
-        //Initialize the session
-        niFgen.init(this.config.getGenerateChannel(), true, true);
-        //Configure the active channels for the session
+        niFgen.init(this.config.getGenerateDevice(), true, true);
         niFgen.configureChannels("0");
-        //Configure output for standard function mode
         niFgen.configureOutputMode(NIFgen.VAL_OUTPUT_FUNC);
-        //Configure the standard function to generate
         niFgen.configureStandardWaveform("0", NIFgen.VAL_WFM_SINE, this.config.getVoltage(), 0, frequency, 0);
         return niFgen;
     }
@@ -99,11 +94,11 @@ public class FrequencyResponse {
             NIScope niScope = null;
             try {
                 niScope = new NIScope();
-                niScope.init("PXI1Slot4", false, false);
+                niScope.init(config.getResponseDevice(), false, false);
                 niScope.configureAcquisition(NIScope.VAL_NORMAL);
                 niScope.configureVertical(channelList, 10, 0, NIScope.VAL_DC, 1, true);
                 niScope.configureChanCharacteristics(channelList, NIScope.VAL_1_MEG_OHM, 0);
-                niScope.configureHorizontalTiming(frequency * 128, 1024, 50.0, 1, true);
+                niScope.configureHorizontalTiming(frequency * config.getRateMultiple(), 1024, 50.0, 1, true);
                 niScope.setAttributeViBoolean(channelList, NIScope.ATTR_ENABLE_TIME_INTERLEAVED_SAMPLING, false);
                 niScope.configureTriggerImmediate();
                 niScope.initiateAcquisition();

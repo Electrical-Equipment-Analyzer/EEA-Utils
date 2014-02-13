@@ -13,68 +13,68 @@ import java.util.Objects;
  */
 public class FrequencyResponseConfig implements Serializable {
 
-    private String generateChannel;
-    private String responseChannel;
+    private String generateDevice;
+    private String responseDevice;
     private double voltage;
     private double minFrequency;
     private double maxFrequrncy;
     private int length;
+    private int rateMultiple;
 
-    public FrequencyResponseConfig(String generateChannel, String responseChannel, double voltage, double minFrequency, double maxFrequrncy, int length) {
-        this.generateChannel = generateChannel;
-        this.responseChannel = responseChannel;
+    public FrequencyResponseConfig(String generateDevice, String responseDevice, double voltage, double minFrequency, double maxFrequrncy, int length, int rateMultiple) {
+        this.generateDevice = generateDevice;
+        this.responseDevice = responseDevice;
         this.voltage = voltage;
         this.minFrequency = minFrequency;
         this.maxFrequrncy = maxFrequrncy;
         this.length = length;
+        this.rateMultiple = rateMultiple;
     }
 
-    public String getGenerateChannel() {
-        return generateChannel;
+    public String getGenerateDevice() {
+        return generateDevice;
     }
 
-    public void setGenerateChannel(String generateChannel) {
-        this.generateChannel = generateChannel;
+//    public void setGenerateDevice(String generateDevice) {
+//        this.generateDevice = generateDevice;
+//    }
+    public String getResponseDevice() {
+        return responseDevice;
     }
 
-    public String getResponseChannel() {
-        return responseChannel;
-    }
-
-    public void setResponseChannel(String responseChannel) {
-        this.responseChannel = responseChannel;
-    }
-
+//    public void setResponseDevice(String responseDevice) {
+//        this.responseDevice = responseDevice;
+//    }
     public double getVoltage() {
         return voltage;
     }
 
-    public void setVoltage(double voltage) {
-        this.voltage = voltage;
-    }
-
+//    public void setVoltage(double voltage) {
+//        this.voltage = voltage;
+//    }
     public double getMinFrequency() {
         return minFrequency;
     }
 
-    public void setMinFrequency(double minFrequency) {
-        this.minFrequency = minFrequency;
-    }
-
+//    public void setMinFrequency(double minFrequency) {
+//        this.minFrequency = minFrequency;
+//    }
     public double getMaxFrequrncy() {
         return maxFrequrncy;
     }
 
-    public void setMaxFrequrncy(double maxFrequrncy) {
-        this.maxFrequrncy = maxFrequrncy;
-    }
-
+//    public void setMaxFrequrncy(double maxFrequrncy) {
+//        this.maxFrequrncy = maxFrequrncy;
+//    }
     public int getLength() {
         return length;
     }
 
-    public void setLength(int length) {
-        this.length = length;
+//    public void setLength(int length) {
+//        this.length = length;
+//    }
+    public int getRateMultiple() {
+        return rateMultiple;
     }
 
     public double getFrequency(int step) {
@@ -84,14 +84,14 @@ public class FrequencyResponseConfig implements Serializable {
 
     @Override
     public String toString() {
-        return "FrequencyResponseConfig{" + "generateChannel=" + generateChannel + ", responseChannel=" + responseChannel + ", voltage=" + voltage + ", minFrequency=" + minFrequency + ", maxFrequrncy=" + maxFrequrncy + ", length=" + length + '}';
+        return "FrequencyResponseConfig{" + "generateChannel=" + generateDevice + ", responseChannel=" + responseDevice + ", voltage=" + voltage + ", minFrequency=" + minFrequency + ", maxFrequrncy=" + maxFrequrncy + ", length=" + length + '}';
     }
 
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 89 * hash + Objects.hashCode(this.generateChannel);
-        hash = 89 * hash + Objects.hashCode(this.responseChannel);
+        hash = 89 * hash + Objects.hashCode(this.generateDevice);
+        hash = 89 * hash + Objects.hashCode(this.responseDevice);
         hash = 89 * hash + (int) (Double.doubleToLongBits(this.voltage) ^ (Double.doubleToLongBits(this.voltage) >>> 32));
         hash = 89 * hash + (int) (Double.doubleToLongBits(this.minFrequency) ^ (Double.doubleToLongBits(this.minFrequency) >>> 32));
         hash = 89 * hash + (int) (Double.doubleToLongBits(this.maxFrequrncy) ^ (Double.doubleToLongBits(this.maxFrequrncy) >>> 32));
@@ -108,10 +108,10 @@ public class FrequencyResponseConfig implements Serializable {
             return false;
         }
         final FrequencyResponseConfig other = (FrequencyResponseConfig) obj;
-        if (!Objects.equals(this.generateChannel, other.generateChannel)) {
+        if (!Objects.equals(this.generateDevice, other.generateDevice)) {
             return false;
         }
-        if (!Objects.equals(this.responseChannel, other.responseChannel)) {
+        if (!Objects.equals(this.responseDevice, other.responseDevice)) {
             return false;
         }
         if (Double.doubleToLongBits(this.voltage) != Double.doubleToLongBits(other.voltage)) {
