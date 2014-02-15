@@ -21,18 +21,10 @@ import tw.edu.sju.ee.eea.jni.scope.NIScopeException;
 public class FrequencyResponse {
 
     private FrequencyResponseConfig config;
-    //
-    private double baseFrequency;
-    private int generateLength = 1000;
 
     public FrequencyResponse(FrequencyResponseConfig config) {
         this.config = config;
 
-        this.baseFrequency = (Math.log10(this.config.getMaxFrequrncy()) - Math.log10(this.config.getMinFrequency())) / this.config.getLength();
-    }
-
-    private double getFrequency(int step) {
-        return Math.pow(10, Math.log10(this.config.getMinFrequency()) + (baseFrequency * step));
     }
 
     public NIFgen createGenerate(double frequency) throws NIFgenException {
@@ -48,22 +40,19 @@ public class FrequencyResponse {
         return new Response(frequency);
     }
 
-//    public int getLength() {
-//        return this.config.getLength();
-//    }
     @Override
     public String toString() {
-        return "FrequencyResponse{" + "config=" + config + ", baseFrequency=" + baseFrequency + ", generateLength=" + generateLength + '}';
+        return "FrequencyResponse{" + "config=" + config + '}';
     }
 
     public FrequencyResponseFile process() throws NIFgenException, NIScopeException {
-        Complex[] input = new Complex[this.config.getLength()];
-        Complex[] output = new Complex[this.config.getLength()];
+        Complex[] input = new Complex[this.config.getPoints()];
+        Complex[] output = new Complex[this.config.getPoints()];
         NIFgen niFgen = null;
         Response response = null;
-        for (int i = 0; i < this.config.getLength(); i++) {
+        for (int i = 0; i < this.config.getPoints(); i++) {
             try {
-                double frequency = this.getFrequency(i);
+                double frequency = config.getFrequency(i);
                 niFgen = this.createGenerate(frequency);
                 niFgen.initiateGeneration();
 //                Thread.sleep(100);
@@ -98,7 +87,7 @@ public class FrequencyResponse {
                 niScope.configureAcquisition(NIScope.VAL_NORMAL);
                 niScope.configureVertical(channelList, 10, 0, NIScope.VAL_DC, 1, true);
                 niScope.configureChanCharacteristics(channelList, NIScope.VAL_1_MEG_OHM, 0);
-                niScope.configureHorizontalTiming(frequency * config.getRateMultiple(), 1024, 50.0, 1, true);
+                niScope.configureHorizontalTiming(frequency * config.getRatePerHz(), 1024, 50.0, 1, true);
                 niScope.setAttributeViBoolean(channelList, NIScope.ATTR_ENABLE_TIME_INTERLEAVED_SAMPLING, false);
                 niScope.configureTriggerImmediate();
                 niScope.initiateAcquisition();
@@ -112,7 +101,7 @@ public class FrequencyResponse {
                 double sampleRate = niScope.sampleRate();
 
                 Wave waveIn = new Wave(sampleRate, Arrays.copyOfRange(waveform, 0, 1024));
-                Wave waveOut = new Wave(sampleRate, Arrays.copyOfRange(waveform, actualRecordLength, actualRecordLength +1024));
+                Wave waveOut = new Wave(sampleRate, Arrays.copyOfRange(waveform, actualRecordLength, actualRecordLength + 1024));
 
                 input = waveIn.getValue(frequency);
                 output = waveOut.getValue(frequency);

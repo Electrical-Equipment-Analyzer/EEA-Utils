@@ -40,7 +40,7 @@ public class FrequencyResponseFile extends EEAFile implements Serializable {
 
     public Map<Double, Complex> getGain() {
         LinkedHashMap<Double, Complex> map = new LinkedHashMap<Double, Complex>();
-        for (int i = 0; i < config.getLength(); i++) {
+        for (int i = 0; i < config.getPoints(); i++) {
             map.put(config.getFrequency(i), out[i].divide(in[i]));
         }
         return map;

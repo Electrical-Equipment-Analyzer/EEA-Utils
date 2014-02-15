@@ -6,96 +6,128 @@ package tw.edu.sju.ee.eea.core.frequency.response;
 
 import java.io.Serializable;
 import java.util.Objects;
+import org.openide.util.NbBundle.Messages;
 
 /**
  *
  * @author 薛聿明
  */
+@Messages({
+    "name=Configuration",
+    "LBL_GenerateDevice=Generate Device",
+    "DCT_GenerateDevice=Generate Device Description",
+    "LBL_GenerateChannel=Generate Channel",
+    "DCT_GenerateChannel=Generate Channel Description",
+    "LBL_ResponseDevice=Response Device",
+    "DCT_ResponseDevice=Response Device Description",
+    "LBL_ResponseChannel=Response Channel",
+    "DCT_ResponseChannel=Response Channel Description",
+    "LBL_Voltage=Voltage",
+    "DCT_Voltage=Voltage Description",
+    "LBL_StartFrequency=Start Frequency",
+    "DCT_StartFrequency=Start Frequency Description",
+    "LBL_StopFrequrncy=Stop Frequency",
+    "DCT_StopFrequrncy=Stop Frequency Description",
+    "LBL_Points=Testing Points",
+    "DCT_Points=Testing Points Description",
+    "LBL_RatePerHz=Sampling Rate",
+    "DCT_RatePerHz=Sampling Rate Description",
+    "LBL_Description=Description",
+    "DCT_Description=Description Description"
+})
 public class FrequencyResponseConfig implements Serializable {
 
-    private String generateDevice;
-    private String responseDevice;
-    private double voltage;
-    private double minFrequency;
-    private double maxFrequrncy;
-    private int length;
-    private int rateMultiple;
+    private final String generateDevice;
+    private final String generateChannel;
+    private final String responseDevice;
+    private final String responseChannel;
+    private final double voltage;
+    private final double startFrequency;
+    private final double stopFrequrncy;
+    private final int points;
+    private final int ratePerHz;
+    private final String description;
 
-    public FrequencyResponseConfig(String generateDevice, String responseDevice, double voltage, double minFrequency, double maxFrequrncy, int length, int rateMultiple) {
+    public FrequencyResponseConfig(String generateDevice, String responseDevice, double voltage, double startFrequency, double stopFrequrncy, int points, int ratePerHz) {
+        this(generateDevice, "", responseDevice, "", voltage, startFrequency, stopFrequrncy, points, ratePerHz, "");
+    }
+
+    public FrequencyResponseConfig(String generateDevice, String generateChannel, String responseDevice, String responseChannel, double voltage, double startFrequency, double stopFrequrncy, int points, int ratePerHz, String description) {
         this.generateDevice = generateDevice;
+        this.generateChannel = generateChannel;
         this.responseDevice = responseDevice;
+        this.responseChannel = responseChannel;
         this.voltage = voltage;
-        this.minFrequency = minFrequency;
-        this.maxFrequrncy = maxFrequrncy;
-        this.length = length;
-        this.rateMultiple = rateMultiple;
+        this.startFrequency = startFrequency;
+        this.stopFrequrncy = stopFrequrncy;
+        this.points = points;
+        this.ratePerHz = ratePerHz;
+        this.description = description;
     }
 
     public String getGenerateDevice() {
         return generateDevice;
     }
 
-//    public void setGenerateDevice(String generateDevice) {
-//        this.generateDevice = generateDevice;
-//    }
+    public String getGenerateChannel() {
+        return generateChannel;
+    }
+
     public String getResponseDevice() {
         return responseDevice;
     }
 
-//    public void setResponseDevice(String responseDevice) {
-//        this.responseDevice = responseDevice;
-//    }
+    public String getResponseChannel() {
+        return responseChannel;
+    }
+
     public double getVoltage() {
         return voltage;
     }
 
-//    public void setVoltage(double voltage) {
-//        this.voltage = voltage;
-//    }
-    public double getMinFrequency() {
-        return minFrequency;
+    public double getStartFrequency() {
+        return startFrequency;
     }
 
-//    public void setMinFrequency(double minFrequency) {
-//        this.minFrequency = minFrequency;
-//    }
-    public double getMaxFrequrncy() {
-        return maxFrequrncy;
+    public double getStopFrequrncy() {
+        return stopFrequrncy;
     }
 
-//    public void setMaxFrequrncy(double maxFrequrncy) {
-//        this.maxFrequrncy = maxFrequrncy;
-//    }
-    public int getLength() {
-        return length;
+    public int getPoints() {
+        return points;
     }
 
-//    public void setLength(int length) {
-//        this.length = length;
-//    }
-    public int getRateMultiple() {
-        return rateMultiple;
+    public int getRatePerHz() {
+        return ratePerHz;
     }
 
-    public double getFrequency(int step) {
-        double baseFrequency = (Math.log10(maxFrequrncy) - Math.log10(minFrequency)) / length;
-        return Math.pow(10, Math.log10(minFrequency) + (baseFrequency * step));
+    public String getDescription() {
+        return description;
+    }
+
+    public double getFrequency(int point) {
+        double baseFrequency = (Math.log10(stopFrequrncy) - Math.log10(startFrequency)) / points;
+        return Math.pow(10, Math.log10(startFrequency) + (baseFrequency * point));
     }
 
     @Override
     public String toString() {
-        return "FrequencyResponseConfig{" + "generateChannel=" + generateDevice + ", responseChannel=" + responseDevice + ", voltage=" + voltage + ", minFrequency=" + minFrequency + ", maxFrequrncy=" + maxFrequrncy + ", length=" + length + '}';
+        return "FrequencyResponseConfig{" + "generateDevice=" + generateDevice + ", generateChannel=" + generateChannel + ", responseDevice=" + responseDevice + ", responseChannel=" + responseChannel + ", voltage=" + voltage + ", startFrequency=" + startFrequency + ", stopFrequrncy=" + stopFrequrncy + ", points=" + points + ", ratePerHz=" + ratePerHz + '}';
     }
 
     @Override
     public int hashCode() {
-        int hash = 7;
-        hash = 89 * hash + Objects.hashCode(this.generateDevice);
-        hash = 89 * hash + Objects.hashCode(this.responseDevice);
-        hash = 89 * hash + (int) (Double.doubleToLongBits(this.voltage) ^ (Double.doubleToLongBits(this.voltage) >>> 32));
-        hash = 89 * hash + (int) (Double.doubleToLongBits(this.minFrequency) ^ (Double.doubleToLongBits(this.minFrequency) >>> 32));
-        hash = 89 * hash + (int) (Double.doubleToLongBits(this.maxFrequrncy) ^ (Double.doubleToLongBits(this.maxFrequrncy) >>> 32));
-        hash = 89 * hash + this.length;
+        int hash = 5;
+        hash = 41 * hash + Objects.hashCode(this.generateDevice);
+        hash = 41 * hash + Objects.hashCode(this.generateChannel);
+        hash = 41 * hash + Objects.hashCode(this.responseDevice);
+        hash = 41 * hash + Objects.hashCode(this.responseChannel);
+        hash = 41 * hash + (int) (Double.doubleToLongBits(this.voltage) ^ (Double.doubleToLongBits(this.voltage) >>> 32));
+        hash = 41 * hash + (int) (Double.doubleToLongBits(this.startFrequency) ^ (Double.doubleToLongBits(this.startFrequency) >>> 32));
+        hash = 41 * hash + (int) (Double.doubleToLongBits(this.stopFrequrncy) ^ (Double.doubleToLongBits(this.stopFrequrncy) >>> 32));
+        hash = 41 * hash + this.points;
+        hash = 41 * hash + this.ratePerHz;
+        hash = 41 * hash + Objects.hashCode(this.description);
         return hash;
     }
 
@@ -111,19 +143,28 @@ public class FrequencyResponseConfig implements Serializable {
         if (!Objects.equals(this.generateDevice, other.generateDevice)) {
             return false;
         }
+        if (!Objects.equals(this.generateChannel, other.generateChannel)) {
+            return false;
+        }
         if (!Objects.equals(this.responseDevice, other.responseDevice)) {
+            return false;
+        }
+        if (!Objects.equals(this.responseChannel, other.responseChannel)) {
             return false;
         }
         if (Double.doubleToLongBits(this.voltage) != Double.doubleToLongBits(other.voltage)) {
             return false;
         }
-        if (Double.doubleToLongBits(this.minFrequency) != Double.doubleToLongBits(other.minFrequency)) {
+        if (Double.doubleToLongBits(this.startFrequency) != Double.doubleToLongBits(other.startFrequency)) {
             return false;
         }
-        if (Double.doubleToLongBits(this.maxFrequrncy) != Double.doubleToLongBits(other.maxFrequrncy)) {
+        if (Double.doubleToLongBits(this.stopFrequrncy) != Double.doubleToLongBits(other.stopFrequrncy)) {
             return false;
         }
-        if (this.length != other.length) {
+        if (this.points != other.points) {
+            return false;
+        }
+        if (this.ratePerHz != other.ratePerHz) {
             return false;
         }
         return true;
