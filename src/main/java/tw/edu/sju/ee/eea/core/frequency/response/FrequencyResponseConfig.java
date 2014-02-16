@@ -48,10 +48,6 @@ public class FrequencyResponseConfig implements Serializable {
     private final int ratePerHz;
     private final String description;
 
-    public FrequencyResponseConfig(String generateDevice, String responseDevice, double voltage, double startFrequency, double stopFrequrncy, int points, int ratePerHz) {
-        this(generateDevice, "", responseDevice, "", voltage, startFrequency, stopFrequrncy, points, ratePerHz, "");
-    }
-
     public FrequencyResponseConfig(String generateDevice, String generateChannel, String responseDevice, String responseChannel, double voltage, double startFrequency, double stopFrequrncy, int points, int ratePerHz, String description) {
         this.generateDevice = generateDevice;
         this.generateChannel = generateChannel;
