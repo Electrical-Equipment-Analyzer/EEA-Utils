@@ -9,6 +9,8 @@ import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.commons.math3.complex.Complex;
+import org.netbeans.api.progress.ProgressHandle;
+import tw.edu.sju.ee.eea.core.math.MetricPrefixFormat;
 import tw.edu.sju.ee.eea.jni.fgen.NIFgen;
 import tw.edu.sju.ee.eea.jni.fgen.NIFgenException;
 import tw.edu.sju.ee.eea.jni.scope.NIScope;
@@ -45,14 +47,19 @@ public class FrequencyResponse {
         return "FrequencyResponse{" + "config=" + config + '}';
     }
 
-    public FrequencyResponseFile process() throws NIFgenException, NIScopeException {
+    private MetricPrefixFormat format = new MetricPrefixFormat("0");
+
+    public FrequencyResponseFile process(ProgressHandle handle) throws NIFgenException, NIScopeException {
+        handle.start(this.config.getPoints());
+        handle.progress("Initial...");
         Complex[] input = new Complex[this.config.getPoints()];
         Complex[] output = new Complex[this.config.getPoints()];
         NIFgen niFgen = null;
         Response response = null;
         for (int i = 0; i < this.config.getPoints(); i++) {
+            double frequency = config.getFrequency(i);
+            handle.progress(format.format(frequency) + " Hz", i);
             try {
-                double frequency = config.getFrequency(i);
                 niFgen = this.createGenerate(frequency);
                 niFgen.initiateGeneration();
 //                Thread.sleep(100);
@@ -70,6 +77,7 @@ public class FrequencyResponse {
                 niFgen = null;
             }
         }
+        handle.finish();
         return new FrequencyResponseFile(config, input, output);
     }
 
