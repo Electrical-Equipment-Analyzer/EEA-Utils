@@ -14,25 +14,15 @@ import org.openide.util.NbBundle.Messages;
  */
 @Messages({
     "name=Configuration",
-    "LBL_GenerateDevice=Generate Device",
     "DCT_GenerateDevice=Generate Device Description",
-    "LBL_GenerateChannel=Generate Channel",
     "DCT_GenerateChannel=Generate Channel Description",
-    "LBL_ResponseDevice=Response Device",
     "DCT_ResponseDevice=Response Device Description",
-    "LBL_ResponseChannel=Response Channel",
     "DCT_ResponseChannel=Response Channel Description",
-    "LBL_Voltage=Voltage",
     "DCT_Voltage=Voltage Description",
-    "LBL_StartFrequency=Start Frequency",
     "DCT_StartFrequency=Start Frequency Description",
-    "LBL_StopFrequrncy=Stop Frequency",
     "DCT_StopFrequrncy=Stop Frequency Description",
-    "LBL_Points=Testing Points",
     "DCT_Points=Testing Points Description",
-    "LBL_RatePerHz=Sampling Rate",
     "DCT_RatePerHz=Sampling Rate Description",
-    "LBL_Description=Description",
     "DCT_Description=Description Description"
 })
 public class FrequencyResponseConfig implements Serializable {
