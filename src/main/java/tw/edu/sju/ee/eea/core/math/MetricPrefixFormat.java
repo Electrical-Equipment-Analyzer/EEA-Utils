@@ -31,13 +31,7 @@ public class MetricPrefixFormat extends DecimalFormat {
         }
 
         public int exp() {
-            Prefix[] values = Prefix.values();
-            for (int i = 0; i < values.length; i++) {
-                if (this.equals(values)) {
-                    return i - NONE;
-                }
-            }
-            return NONE;
+            return NONE - this.ordinal();
         }
     }
 
