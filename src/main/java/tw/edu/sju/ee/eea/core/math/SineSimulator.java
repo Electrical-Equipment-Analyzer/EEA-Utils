@@ -29,6 +29,7 @@ public class SineSimulator {
     private double frequency;
     private double amp;
     private long timeInMillis = Calendar.getInstance().getTimeInMillis();
+    private int index;
 
     public SineSimulator(double samplerate, double frequency, double amp) {
         this.samplerate = samplerate;
@@ -38,6 +39,10 @@ public class SineSimulator {
 
     public double getX(int index) {
         return index / samplerate;
+    }
+    
+    public double getY() {
+        return getY(index++);
     }
 
     public double getY(int index) {
