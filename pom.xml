@@ -67,7 +67,7 @@
         <dependency>
             <groupId>tw.edu.sju.ee.eea.jni</groupId>
             <artifactId>jni-scope</artifactId>
-            <version>1.0</version>
+            <version>1.0.1-SNAPSHOT</version>
             <type>jar</type>
         </dependency>
         <dependency>
